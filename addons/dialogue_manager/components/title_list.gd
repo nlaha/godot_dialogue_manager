@@ -4,6 +4,9 @@ extends VBoxContainer
 signal title_selected(title: String)
 
 
+const DialogueConstants = preload("../constants.gd")
+
+
 @onready var filter_edit: LineEdit = $FilterEdit
 @onready var list: ItemList = $List
 
@@ -24,6 +27,8 @@ var filter: String:
 
 func _ready() -> void:
 	apply_theme()
+
+	filter_edit.placeholder_text = DialogueConstants.translate(&"titles_list.filter")
 
 
 func select_title(title: String) -> void:
@@ -57,5 +62,6 @@ func _on_filter_edit_text_changed(new_text: String) -> void:
 
 
 func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
-	var title = list.get_item_text(index)
-	emit_signal("title_selected", title)
+	if mouse_button_index == MOUSE_BUTTON_LEFT:
+		var title = list.get_item_text(index)
+		title_selected.emit(title)
